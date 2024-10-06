@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { producto } from 'src/common/schemas/producto.schema';
+import { Producto } from 'src/common/schemas/producto.schema';
 import { CrearProductoDto } from './dtos/crear-produto.dto';
 import { UpdateProductoDto } from './dtos/update-producto.dto';
-import { UUID } from 'crypto';
+
 @Injectable()
 export class ProductoService {
-    constructor(@InjectModel(producto.name) private productoModel: Model<producto>){}
+    constructor(@InjectModel(Producto.name) private productoModel: Model<Producto>){}
 
     async create (producto: CrearProductoDto){
         const createdProducto = new this.productoModel(producto);
