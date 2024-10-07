@@ -1,24 +1,24 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { bootstrap } from '../src/main';
 
-describe('AppController (e2e)', () => {
+describe('Pruebas E2E para la app', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+  // Antes de todas las pruebas, inicializamos la aplicación
+  beforeAll(async () => {
+    app = await bootstrap();  // Obtenemos la instancia de la app
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  // Prueba de ejemplo para el endpoint raíz
+  it('/ (GET)', async () => {
+    const res = await request(app.getHttpServer()).get('/');
+    expect(res.status).toBe(200);
+    expect(res.text).toBe('Hello World');  // Ajusta según tu respuesta esperada
+  });
+
+  // Después de todas las pruebas, cerramos la aplicación
+  afterAll(async () => {
+    await app.close();
   });
 });
