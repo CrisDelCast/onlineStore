@@ -1,8 +1,4 @@
 // src/users/users.module.ts
-<<<<<<< HEAD
-=======
-
->>>>>>> 6bfea80c73953ad28aa216de6bec4e13dc8f2bd5
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './users.service';

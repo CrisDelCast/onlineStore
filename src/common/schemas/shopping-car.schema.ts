@@ -8,11 +8,11 @@ export type ShoppingCartDocument = ShoppingCart & Document;
 
 @Schema()
 export class ShoppingCart {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'userId', required: true })
   user: User;
 
   @Prop([{
-    product: { type: Types.ObjectId, ref: 'Product', required: true },
+    product: { type: Types.ObjectId, ref: 'productId', required: true },
     quantity: { type: Number, required: true, min: 1 }
   }])
   items: { product: Types.ObjectId, quantity: number }[];  // Cambiamos 'Product' por 'Types.ObjectId'

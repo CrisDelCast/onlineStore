@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // Importa el modelo si es MongoDB o el repositorio si es SQL
 import { InjectModel } from '@nestjs/mongoose';  // O @InjectRepository para SQL
 import { Model } from 'mongoose';  // O Repository si es SQL
-import { Category, CategoryDocument } from 'src/common/schemas/categorias.schema'; // O la entidad si es SQL
+import { Category,CategoryDocument } from 'src/common/schemas/categorias.schema';// O la entidad si es SQL
 
 @Injectable()
 export class CategoriasService {
