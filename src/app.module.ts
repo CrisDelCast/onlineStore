@@ -7,10 +7,12 @@ import { ProductoModule } from './producto/producto.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { CategoriasController } from './categorias/categorias.controller';
 import { ProductoController } from './producto/producto.controller';
-import { ShoppingCarController } from './shopping-car/shopping-car.controller';
-import { ShoppingCarModule } from './shopping-car/shopping-car.module';
-import { ShoppingCarService } from './shopping-car/shopping-car.service';
+import { ShoppingCartController } from './shopping-car/shopping-car.controller';
+import { ShoppingCartModule } from './shopping-car/shopping-car.module';
+import { ShoppingCartService } from './shopping-car/shopping-car.service';
 import { UsersModule } from './users/users.module';
+import { OrdersModule } from './pedidos/pedidos.module';
+import { OrdersController } from './pedidos/pedidos.controller';
 
 @Module({
   imports: [MongooseModule.forRoot(
@@ -18,9 +20,10 @@ import { UsersModule } from './users/users.module';
      AuthModule,
      ProductoModule,
      CategoriasModule,
-     ShoppingCarModule,
-     UsersModule],
-  controllers: [AppController, CategoriasController,ProductoController, ShoppingCarController],
-  providers: [AppService, ShoppingCarService],
+     ShoppingCartModule,
+     UsersModule,
+     OrdersModule],
+  controllers: [AppController, CategoriasController,ProductoController, ShoppingCartController,OrdersController],
+  providers: [AppService],
 })
 export class AppModule { }

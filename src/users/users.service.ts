@@ -1,34 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+// src/users/users.service.ts
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
+import { User,UserDocument } from 'src/common/schemas/users.schema'; 
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel('User') private userModel: Model<any>,
-    private jwtService: JwtService,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  // Registro de usuarios
-  async register(email: string, password: string): Promise<any> {
-    const newUser = new this.userModel({ email, password });
-    return await newUser.save();
+  async create(userData: CreateUserDto): Promise<User> {
+    const createdUser = new this.userModel(userData);
+    return createdUser.save();
   }
 
-  // Validar al usuario y generar token JWT
-  async validateUser(email: string, password: string): Promise<string> {
-    const user = await this.userModel.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new NotFoundException('Invalid credentials');
-    }
-    const payload = { email: user.email, sub: user._id };
-    return this.jwtService.sign(payload);
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    return this.userModel.findOne({ email }).exec();
   }
 
-  // Obtener un usuario por su ID
-  async findById(userId: string): Promise<any> {
-    return await this.userModel.findById(userId);
+  async findOneById(id: string): Promise<User | undefined> {
+    return this.userModel.findById(id).exec();
   }
 }

@@ -1,22 +1,18 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { AuthGuard } from '@nestjs/passport';
+// src/auth/auth.controller.ts
+import { Controller, Post, Body } from '@nestjs/common';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  // Registro de usuarios
   @Post('register')
-  async register(@Body('email') email: string, @Body('password') password: string) {
-    return this.usersService.register(email, password);
+  async register(@Body() body: { username: string; email: string; password: string }) {
+    return this.authService.register(body.username, body.email, body.password);
   }
 
-  // Login de usuarios
   @Post('login')
-  async login(@Body('email') email: string, @Body('password') password: string) {
-    return {
-      access_token: await this.usersService.validateUser(email, password),
-    };
+  async login(@Body() body: { email: string; password: string }) {
+    return this.authService.login(body.email, body.password);
   }
 }

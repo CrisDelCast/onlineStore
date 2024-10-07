@@ -1,24 +1,27 @@
-// src/shopping-cart/schemas/shopping-cart.schema.ts
+// src/orders/schemas/order.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { User } from './users.schema';
 import { Producto } from './producto.schema';
 
-export type ShoppingCartDocument = ShoppingCart & Document;
+export type OrderDocument = Order & Document;
 
 @Schema()
-export class ShoppingCart {
+export class Order {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   user: User;
 
   @Prop([{
     product: { type: Types.ObjectId, ref: 'Product', required: true },
-    quantity: { type: Number, required: true, min: 1 }
+    quantity: { type: Number, required: true }
   }])
-  items: { product: Types.ObjectId, quantity: number }[];  // Cambiamos 'Product' por 'Types.ObjectId'
+  items: { product: Producto, quantity: number }[];
 
   @Prop({ default: Date.now })
-  createdAt: Date;
+  orderDate: Date;
+
+  @Prop({ required: true })
+  status: string;  // 'pending', 'paid', 'shipped', etc.
 }
 
-export const ShoppingCartSchema = SchemaFactory.createForClass(ShoppingCart);
+export const OrderSchema = SchemaFactory.createForClass(Order);

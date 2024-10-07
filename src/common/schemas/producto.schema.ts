@@ -14,7 +14,7 @@ export class Producto {
   })
   id: string;
 
-  @Prop({ required: true }) // Nombre del producto 
+  @Prop({ required: true, unique: true}) // Nombre del producto 
   name: string;
 
   @Prop({ required: true }) // Precio del producto requerido

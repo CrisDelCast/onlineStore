@@ -1,15 +1,27 @@
-import { Schema } from 'mongoose';
-import * as bcrypt from 'bcryptjs';
+// src/users/schemas/user.schema.ts
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export const UserSchema = new Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
+export type UserDocument = User & Document;
 
-// Encriptar la contraseña antes de guardar el usuario
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+export enum UserRole {
+  ADMIN = 'admin',
+  CLIENT = 'client',
+}
+
+@Schema()
+export class User {
+  @Prop({ required: true, unique: true })
+  username: string;
+
+  @Prop({ required: true, unique: true })  // Asegura que el correo sea único
+  email: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ enum: UserRole, default: UserRole.CLIENT })  // Uso del enum para el rol
+  role: UserRole;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);

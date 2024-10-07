@@ -1,56 +1,31 @@
-import { ShoppingCarService } from './shopping-car.service';
-import { Controller, Get, Post, Delete, Param, Body, UseGuards } from '@nestjs/common';
+// src/shopping-cart/shopping-cart.controller.ts
+import { Controller, Post, Delete, Get, Param, Body, UseGuards } from '@nestjs/common';
+import { ShoppingCartService } from './shopping-car.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('cart')
-export class ShoppingCarController {
-  constructor(private readonly shoppingCartService: ShoppingCarService) {}
-
-  // Obtener el carrito del usuario
+@Controller('shopping-cart')
+export class ShoppingCartController {
+  constructor(private readonly shoppingCartService: ShoppingCartService) {}
+  @UseGuards(JwtAuthGuard)
   @Get(':userId')
-  getCart(@Param('userId') userId: string) {
-    return this.shoppingCartService.getCart(userId);
+  async getCart(@Param('userId') userId: string) {
+    return this.shoppingCartService.getCartByUser(userId);
   }
-
-  // Agregar un producto al carrito
-  @Post(':userId')
-  addItem(
-    @Param('userId') userId: string,
+  @UseGuards(JwtAuthGuard)
+  @Post('add')
+  async addItem(
+    @Body('userId') userId: string,
     @Body('productId') productId: string,
-    @Body('quantity') quantity: number,
+    @Body('quantity') quantity: number
   ) {
-    return this.shoppingCartService.addItem(userId, productId, quantity);
+    return this.shoppingCartService.addItemToCart(userId, productId, quantity);
   }
-
-  // Eliminar un producto del carrito
-  @Delete(':userId/:productId')
-  removeItem(
-    @Param('userId') userId: string,
-    @Param('productId') productId: string,
+  @UseGuards(JwtAuthGuard)
+  @Delete('remove')
+  async removeItem(
+    @Body('userId') userId: string,
+    @Body('productId') productId: string
   ) {
-    return this.shoppingCartService.removeItem(userId, productId);
+    return this.shoppingCartService.removeItemFromCart(userId, productId);
   }
-
-  // Limpiar el carrito
-  @Delete(':userId')
-  clearCart(@Param('userId') userId: string) {
-    this.shoppingCartService.clearCart(userId);
-  }
-   // Proteger la ruta con JWT
-   @UseGuards(JwtAuthGuard)
-   @Get(':userId')
-   getCart(@Param('userId') userId: string) {
-     return this.shoppingCartService.getCart(userId);
-   }
- 
-   // Agregar producto al carrito
-   @UseGuards(JwtAuthGuard)
-   @Post(':userId')
-   addItem(
-     @Param('userId') userId: string,
-     @Body('productId') productId: string,
-     @Body('quantity') quantity: number,
-   ) {
-     return this.shoppingCartService.addItem(userId, productId, quantity);
-   }
 }

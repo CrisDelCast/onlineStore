@@ -1,51 +1,56 @@
+// src/shopping-cart/shopping-cart.service.ts
 import { Injectable } from '@nestjs/common';
-import { Cart, CartItem  } from './entities/car.entity'; 
-import { ProductoService } from 'src/producto/producto.service'; 
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { ShoppingCart } from 'src/common/schemas/shopping-car.schema';
+
 
 @Injectable()
-export class ShoppingCarService {
-  private carts: Map<string, Cart> = new Map();  // Mapa de carritos por usuario
+export class ShoppingCartService {
+  constructor(
+    @InjectModel(ShoppingCart.name) private shoppingCartModel: Model<ShoppingCart>
+  ) {}
 
-  constructor(private productsService: ProductoService) {}
-
-  // Obtener el carrito de un usuario
-  getCart(userId: string): Cart {
-    return this.carts.get(userId) || new Cart(userId);
+  async getCartByUser(userId: string): Promise<ShoppingCart> {
+    return this.shoppingCartModel.findOne({ user: userId }).populate('items.product').exec();
   }
 
-  // Agregar un producto al carrito
-  async addItem(userId: string, productId: string, quantity: number): Promise<Cart> {
-    let cart = this.getCart(userId);
-    const product = await this.productsService.findOne(productId);
+  async addItemToCart(userId: string, productId: string, quantity: number): Promise<ShoppingCart> {
+    const cart = await this.shoppingCartModel.findOne({ user: userId });
+    const productObjectId = new Types.ObjectId(productId);  // Aseguramos que sea un ObjectId
 
-    // Si el producto ya está en el carrito, aumenta la cantidad
-    const existingItem = cart.items.find(item => item.productId === productId);
-    if (existingItem) {
-      existingItem.quantity += quantity;
+    if (cart) {
+      const itemIndex = cart.items.findIndex(item => item.product.equals(productObjectId));
+      if (itemIndex > -1) {
+        // Si el producto ya está en el carrito, actualizamos la cantidad
+        cart.items[itemIndex].quantity += quantity;
+      } else {
+        // Si no está en el carrito, lo agregamos
+        cart.items.push({ product: productObjectId, quantity });
+      }
+      return cart.save();
     } else {
-      cart.items.push({ productId, quantity });
+      // Si el usuario no tiene carrito, creamos uno
+      const newCart = new this.shoppingCartModel({
+        user: userId,
+        items: [{ product: productObjectId, quantity }]
+      });
+      return newCart.save();
     }
-
-    // Recalcular el precio total
-    cart.totalPrice += product.price * quantity;
-    this.carts.set(userId, cart);
-    return cart;
   }
 
-  // Eliminar un producto del carrito
-  async removeItem(userId: string, productId: string): Promise<Cart> {
-    let cart = this.getCart(userId);
-    cart.items = cart.items.filter(item => item.productId !== productId);
+  async removeItemFromCart(userId: string, productId: string): Promise<ShoppingCart> {
+    const cart = await this.shoppingCartModel.findOne({ user: userId });
+    const productObjectId = new Types.ObjectId(productId);
 
-    const product = await this.productsService.findOne(productId);
-    cart.totalPrice -= product.price * (cart.items.find(item => item.productId === productId)?.quantity || 0);
-
-    this.carts.set(userId, cart);
-    return cart;
+    if (cart) {
+      cart.items = cart.items.filter(item => !item.product.equals(productObjectId));
+      return cart.save();
+    }
+    return null;
   }
 
-  // Limpiar el carrito
-  clearCart(userId: string): void {
-    this.carts.delete(userId);
+  async clearCart(userId: string): Promise<void> {
+    await this.shoppingCartModel.findOneAndDelete({ user: userId }).exec();
   }
 }
