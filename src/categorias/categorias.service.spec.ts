@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CategoriasService } from '../../src/categorias/categorias.service';
+import { CategoriasService } from '.././categorias/categorias.service';
 import { getModelToken } from '@nestjs/mongoose'; // Importa este token
 import { Model } from 'mongoose'; // Para crear un mock del modelo
-import { Category } from 'src/common/schemas/categorias.schema'; // Asegúrate de que la ruta sea correcta
+import { Category } from '../common/schemas/categorias.schema'; // Asegúrate de que la ruta sea correcta
 
 describe('CategoriasService', () => {
   let service: CategoriasService;

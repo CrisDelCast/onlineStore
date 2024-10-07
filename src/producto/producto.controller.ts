@@ -1,8 +1,8 @@
 import { Controller, Post,Body,ValidationPipe, UseGuards, Get, Param} from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CrearProductoDto } from './dtos/crear-produto.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Producto } from 'src/common/schemas/producto.schema';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Producto } from '../common/schemas/producto.schema';
 
 @Controller('producto')
 export class ProductoController {
