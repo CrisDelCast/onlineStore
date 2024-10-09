@@ -1,7 +1,7 @@
 // src/shopping-cart/shopping-cart.controller.ts
 import { Controller, Post, Delete, Get, Param, Body, UseGuards } from '@nestjs/common';
 import { ShoppingCartService } from './shopping-car.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('shopping-cart')
 export class ShoppingCartController {

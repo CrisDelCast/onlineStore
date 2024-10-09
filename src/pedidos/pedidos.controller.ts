@@ -1,7 +1,7 @@
 // src/orders/orders.controller.ts
 import { Controller, Post, Get, Param, Body, UseGuards } from '@nestjs/common';
 import { OrdersService } from './pedidos.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('orders')
 export class OrdersController {

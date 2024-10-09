@@ -2,8 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Order,OrderDocument } from 'src/common/schemas/pedidos.schema';
-import { ShoppingCartService } from 'src/shopping-car/shopping-car.service';
+import { Order,OrderDocument } from '../common/schemas/pedidos.schema';
+import { ShoppingCartService } from '../shopping-car/shopping-car.service';
 
 @Injectable()
 export class OrdersService {

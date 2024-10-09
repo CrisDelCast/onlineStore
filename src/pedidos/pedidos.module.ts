@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrdersService } from './pedidos.service';
 import { OrdersController } from './pedidos.controller';
-import { Order,OrderSchema } from 'src/common/schemas/pedidos.schema';
-import { ShoppingCartModule } from 'src/shopping-car/shopping-car.module';
+import { Order,OrderSchema } from '../common/schemas/pedidos.schema';
+import { ShoppingCartModule } from '../shopping-car/shopping-car.module';
 
 @Module({
   imports: [

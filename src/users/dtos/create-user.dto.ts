@@ -1,7 +1,6 @@
 // src/users/dto/create-user.dto.ts
 export class CreateUserDto {
-    readonly username: string;
-    readonly email: string;
-    readonly password: string;
-  }
-  
+  username: string;  
+  email: string;    
+  password: string;  
+}

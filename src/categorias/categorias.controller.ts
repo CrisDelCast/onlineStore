@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
 import { CategoriasService } from './categorias.service'; 
-import { Category } from 'src/common/schemas/categorias.schema'; // O la entidad si es SQL
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Category } from '../common/schemas/categorias.schema';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('categorias')
 export class CategoriasController {

@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { ShoppingCart } from 'src/common/schemas/shopping-car.schema';
+import { ShoppingCart } from '../common/schemas/shopping-car.schema';
 
 
 @Injectable()
